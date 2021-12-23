@@ -5,7 +5,6 @@ import 'package:among_us_jump/home/character/my_character.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:just_audio/just_audio.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    runGame();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
@@ -31,8 +31,6 @@ class _HomePageState extends State<HomePage> {
 
   void runGame() {
     Timer.periodic(duration, (timer) {
-      time += 0.005;
-      // print(time);
       setState(() {
         time += 0.005;
       });
@@ -40,14 +38,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   String formatTime(double time) {
-    int seconds = time.floor() % 60;
-    int minutes = (time - seconds / 60).floor();
+    int flooredTime = time.floor();
+    String seconds = '${flooredTime % 60}'.padLeft(2,'0');
+    String minutes = '${flooredTime ~/ 60}';
     return '$minutes : $seconds';
   }
 
   @override
   Widget build(BuildContext context) {
-    runGame();
     return Scaffold(
       body: GestureDetector(
           onTap: () {
@@ -57,17 +55,17 @@ class _HomePageState extends State<HomePage> {
             children: [
               Expanded(
                 flex: 3,
-                child: AnimatedContainer(
-                    duration: duration,
+                child: Container(
                     color: const Color.fromRGBO(16, 18, 27, 1.0),
                     child: Stack(
                       children: [
                         Align(
-                          alignment: Alignment(0.0,-0.9),
+                          alignment: const Alignment(0.0,-0.9),
                           child: Text(
                             formatTime(time),
-                            style: TextStyle(
-                              color: Colors.white
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 25.0
                             ),
                           ),
                         ),
