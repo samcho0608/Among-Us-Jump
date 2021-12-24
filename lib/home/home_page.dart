@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   late final CharacterCubit _characterCubit = CharacterCubit(
       duration: duration);
   double time = 0.0;
-  ObstaclesCubit _obstacleCubit = ObstaclesCubit();
+  final ObstaclesCubit _obstacleCubit = ObstaclesCubit();
   final _audioPlayer = AudioPlayer();
 
   @override
@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   void runGame() {
-    Timer.periodic(const Duration(seconds: 3), (timer) {
+    Timer.periodic(const Duration(seconds: 1, milliseconds: 500), (timer) {
       setState(() {
         _obstacleCubit.createObstacle();
       });
@@ -120,16 +120,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               ),
                               for(var obs in context.read<ObstaclesCubit>().state)
                                 ObstacleWidget(obstacle: obs)
-
-                              // BlocProvider.value(
-                              //   value: _obstacleCubit,
-                              //   child: BlocBuilder(
-                              //     builder: (BuildContext context, state) {
-                              //       for(var obs in context.read<ObstaclesCubit>().state)
-                              //         return ObstacleWidget(obstacle: obs,);
-                              //     },
-                              //   ),
-                              // )
                             ],
                           );
                         },
