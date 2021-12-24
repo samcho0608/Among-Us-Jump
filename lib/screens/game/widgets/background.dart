@@ -1,3 +1,4 @@
+import 'package:among_us_jump/constants.dart';
 import 'package:flutter/material.dart';
 
 class Background extends StatelessWidget {
@@ -10,12 +11,12 @@ class Background extends StatelessWidget {
         Expanded(
           flex: 3,
           child: Container(
-            color: const Color.fromRGBO(16, 18, 27, 1.0),
+            color: darkBackgroundColor,
           ),
         ),
         Expanded(
             child: Container(
-              color: Colors.deepPurple,
+              color: purpleBackgroundColor,
             )
         )
       ],

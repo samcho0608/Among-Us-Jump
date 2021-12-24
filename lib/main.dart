@@ -1,20 +1,22 @@
+import 'package:among_us_jump/routes/app_router.gr.dart';
 import 'package:flutter/material.dart';
-import 'home/home_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+  final AppRouter _appRouter = AppRouter();
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const HomePage(),
+    return MaterialApp.router(
+        routeInformationParser: _appRouter.defaultRouteParser(),
+        routerDelegate: _appRouter.delegate(),
       theme: ThemeData(
-        fontFamily: 'VCR OSD Mono'
+          fontFamily: 'VCR OSD Mono'
       ),
     );
   }

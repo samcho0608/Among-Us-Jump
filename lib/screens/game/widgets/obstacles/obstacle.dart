@@ -5,6 +5,6 @@ class Obstacle {
   double xCoordinate = 1.1;
 
   void move() {
-    xCoordinate -= 0.005;
+    xCoordinate -= 0.015;
   }
 }

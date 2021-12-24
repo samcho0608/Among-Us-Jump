@@ -1,6 +1,7 @@
-import 'package:among_us_jump/home/obstacles/obstacle.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+
+import 'obstacle.dart';
 
 part 'obstacles_state.dart';
 
@@ -12,6 +13,9 @@ class ObstaclesCubit extends Cubit<List<Obstacle>> {
   }
 
   void moveObstacles() {
-    emit([...state]..forEach((e) => e.move()));
+
+    emit([...state]
+      ..where((element) => element.xCoordinate < -1.0)
+      ..forEach((e) => e.move()));
   }
 }

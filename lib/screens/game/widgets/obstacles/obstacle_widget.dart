@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:among_us_jump/home/obstacles/obstacle.dart';
-import 'package:among_us_jump/home/obstacles/sprites/sprites.dart';
 import 'package:flutter/material.dart';
+import 'obstacle.dart';
+import 'sprites/sprites.dart';
 
 class ObstacleWidget extends StatelessWidget {
   final Obstacle obstacle;

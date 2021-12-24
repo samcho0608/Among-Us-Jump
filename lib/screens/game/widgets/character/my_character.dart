@@ -1,6 +1,7 @@
-import 'package:among_us_jump/home/character/character_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'character_cubit.dart';
 
 class MyCharacter extends StatelessWidget {
   const MyCharacter({Key? key}) : super(key: key);
@@ -17,10 +18,10 @@ class MyCharacter extends StatelessWidget {
                   alignment: Alignment(-1.0, state.yCoordinate),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                    child: SizedBox(
-                        width: 60,
-                        child: Image.asset(
-                            'assets/images/among_us_character_red.png')
+                    child: Image.asset(
+                      'assets/images/among_us_characters/among_us_character_red.png',
+                      width: 60,
+                      fit: BoxFit.fitWidth,
                     ),
                   ),
                 )

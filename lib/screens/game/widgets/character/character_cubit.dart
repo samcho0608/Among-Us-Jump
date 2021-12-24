@@ -24,7 +24,7 @@ class CharacterCubit extends Cubit<CharacterState> {
   void jump(double velocity) {
     double time = 0.0;
     Timer.periodic(duration, (timer) {
-      time += 0.01;
+      time += 0.03;
       double targetY =
           CharacterState.initialHeight - (-4.9 * time * time + velocity * time);
       if(targetY >= CharacterState.initialHeight) {
