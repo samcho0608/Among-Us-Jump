@@ -21,6 +21,7 @@ class MyCharacter extends StatelessWidget {
                     child: Image.asset(
                       'assets/images/among_us_characters/among_us_character_red.png',
                       width: 60,
+                      height: 78,
                       fit: BoxFit.fitWidth,
                     ),
                   ),
