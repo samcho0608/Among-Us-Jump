@@ -1,11 +1,16 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:among_us_jump/home/character/character_cubit.dart';
 import 'package:among_us_jump/home/character/my_character.dart';
+import 'package:among_us_jump/home/obstacles/obstacle_widget.dart';
+import 'package:among_us_jump/home/obstacles/obstacles_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
+
+import 'obstacles/obstacle.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,21 +19,23 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Duration duration = const Duration(milliseconds: 5);
   MyCharacter character = const MyCharacter();
-  late final CharacterCubit _characterCubit = CharacterCubit(duration: duration);
+  late final CharacterCubit _characterCubit = CharacterCubit(
+      duration: duration);
   double time = 0.0;
-  final _player = AudioPlayer();
+  ObstaclesCubit _obstacleCubit = ObstaclesCubit();
+  final _audioPlayer = AudioPlayer();
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
-    if(state == AppLifecycleState.paused) {
-      _player.stop();
+    if (state == AppLifecycleState.paused) {
+      _audioPlayer.stop();
     }
-    else if(state == AppLifecycleState.resumed) {
-      _player.play();
+    else if (state == AppLifecycleState.resumed) {
+      _audioPlayer.play();
     }
   }
 
@@ -46,27 +53,34 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
 
   @override
   void dispose() {
-    _player.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
   Future<void> setUpBGM() async {
-    await _player.setAsset('assets/audio/bgm.mp3');
-    await _player.setLoopMode(LoopMode.one);
-    _player.play();
+    await _audioPlayer.setAsset('assets/audio/bgm.mp3');
+    await _audioPlayer.setLoopMode(LoopMode.one);
+    _audioPlayer.play();
   }
 
   void runGame() {
+    Timer.periodic(const Duration(seconds: 3), (timer) {
+      setState(() {
+        _obstacleCubit.createObstacle();
+      });
+    });
+
     Timer.periodic(duration, (timer) {
       setState(() {
         time += 0.005;
+        _obstacleCubit.moveObstacles();
       });
     });
   }
 
   String formatTime(double time) {
     int flooredTime = time.floor();
-    String seconds = '${flooredTime % 60}'.padLeft(2,'0');
+    String seconds = '${flooredTime % 60}'.padLeft(2, '0');
     String minutes = '${flooredTime ~/ 60}';
     return '$minutes : $seconds';
   }
@@ -74,7 +88,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GestureDetector(
+        body: GestureDetector(
           onTap: () {
             _characterCubit.jump();
           },
@@ -84,23 +98,42 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
                 flex: 3,
                 child: Container(
                     color: const Color.fromRGBO(16, 18, 27, 1.0),
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: const Alignment(0.0,-0.9),
-                          child: Text(
-                            formatTime(time),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 25.0
-                            ),
-                          ),
-                        ),
-                        BlocProvider.value(
-                            value: _characterCubit,
-                            child: character
-                        )
-                      ],
+                    child: BlocProvider.value(
+                      value: _obstacleCubit,
+                      child: BlocBuilder<ObstaclesCubit, List<Obstacle>>(
+                        builder: (context, state) {
+                          return Stack(
+                            children: [
+                              Align(
+                                alignment: const Alignment(0.0, -0.9),
+                                child: Text(
+                                  formatTime(time),
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 25.0
+                                  ),
+                                ),
+                              ),
+                              BlocProvider.value(
+                                  value: _characterCubit,
+                                  child: character
+                              ),
+                              for(var obs in context.read<ObstaclesCubit>().state)
+                                ObstacleWidget(obstacle: obs)
+
+                              // BlocProvider.value(
+                              //   value: _obstacleCubit,
+                              //   child: BlocBuilder(
+                              //     builder: (BuildContext context, state) {
+                              //       for(var obs in context.read<ObstaclesCubit>().state)
+                              //         return ObstacleWidget(obstacle: obs,);
+                              //     },
+                              //   ),
+                              // )
+                            ],
+                          );
+                        },
+                      ),
                     )
                 ),
               ),
@@ -111,7 +144,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
               )
             ],
           ),
-      )
+        )
     );
   }
 }

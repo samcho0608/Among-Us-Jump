@@ -1,12 +1,10 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
 
-class Obstacle extends StatelessWidget {
-  const Obstacle({Key? key}) : super(key: key);
+class Obstacle {
+  final type = Random().nextInt(4);
+  double xCoordinate = 1.1;
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-        width: 60,
-        child: Image.asset('assets/images/among_us_rock.png')
-    );  }
+  void move() {
+    xCoordinate -= 0.005;
+  }
 }
