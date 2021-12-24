@@ -13,24 +13,26 @@ class ObstacleWidget extends StatelessWidget {
   Widget buildObstacle() {
     switch(obstacle.type) {
       case 0:
-        return const Rock();
+        return Rock(xCoordinate: obstacle.xCoordinate,);
       case 1:
-        return const ImposterAlien();
+        return ImposterAlien(xCoordinate: obstacle.xCoordinate,);
       case 2:
-        return const ImposterGun();
+        return ImposterGun(xCoordinate: obstacle.xCoordinate,);
       default:
-        return const ImposterVent();
+        return ImposterVent(xCoordinate: obstacle.xCoordinate,);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment(obstacle.xCoordinate, 1.1),
-      child: SizedBox(
-          width: 80,
-          child: buildObstacle()
-      ),
+    return Column(
+      children: [
+        Expanded(
+            flex: 3,
+            child: buildObstacle()
+        ),
+        Expanded(child: Container())
+      ],
     );
   }
 }

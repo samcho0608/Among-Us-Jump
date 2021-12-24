@@ -10,6 +10,9 @@ part 'character_state.dart';
 class CharacterCubit extends Cubit<CharacterState> {
   Duration duration;
   final _player = AudioPlayer();
+  double shortJumpVelocity = 4.5;
+  double longJumpVelocity = 6.5;
+
 
   CharacterCubit({required this.duration}) : super(const CharacterStill());
 
@@ -18,25 +21,37 @@ class CharacterCubit extends Cubit<CharacterState> {
     _player.play();
   }
 
-  void jump() {
+  void jump(double velocity) {
     double time = 0.0;
+    Timer.periodic(duration, (timer) {
+      time += 0.01;
+      double targetY =
+          CharacterState.initialHeight - (-4.9 * time * time + velocity * time);
+      if(targetY >= CharacterState.initialHeight) {
+        targetY = 1.0;
+        emit(const CharacterStill());
+        timer.cancel();
+      }
+      else {
+        emit(CharacterJumping(
+            yCoordinate: targetY
+        ));
+      }
+    });
+
+  }
+
+  void shortJump() {
     if(state is CharacterStill) {
       playJumpSound();
-      Timer.periodic(duration, (timer) {
-        time += 0.01;
-        double targetY =
-            CharacterState.initialHeight - (-4.9 * time * time + 4.5 * time);
-        if(targetY >= CharacterState.initialHeight) {
-          targetY = 1.0;
-          emit(const CharacterStill());
-          timer.cancel();
-        }
-        else {
-          emit(CharacterJumping(
-              yCoordinate: targetY
-          ));
-        }
-      });
+      jump(shortJumpVelocity);
+    }
+  }
+
+  void longJump() {
+    if(state is CharacterStill) {
+      playJumpSound();
+      jump(longJumpVelocity);
     }
   }
 }

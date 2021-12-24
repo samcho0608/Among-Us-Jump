@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'dart:math';
 
+import 'package:among_us_jump/home/widgets/background.dart';
 import 'package:among_us_jump/home/character/character_cubit.dart';
 import 'package:among_us_jump/home/character/my_character.dart';
 import 'package:among_us_jump/home/obstacles/obstacle_widget.dart';
 import 'package:among_us_jump/home/obstacles/obstacles_cubit.dart';
+import 'package:among_us_jump/home/widgets/timer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,61 +79,32 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
   }
 
-  String formatTime(double time) {
-    int flooredTime = time.floor();
-    String seconds = '${flooredTime % 60}'.padLeft(2, '0');
-    String minutes = '${flooredTime ~/ 60}';
-    return '$minutes : $seconds';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: GestureDetector(
-          onTap: () {
-            _characterCubit.jump();
-          },
-          child: Column(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Container(
-                    color: const Color.fromRGBO(16, 18, 27, 1.0),
-                    child: BlocProvider.value(
-                      value: _obstacleCubit,
-                      child: BlocBuilder<ObstaclesCubit, List<Obstacle>>(
-                        builder: (context, state) {
-                          return Stack(
-                            children: [
-                              Align(
-                                alignment: const Alignment(0.0, -0.9),
-                                child: Text(
-                                  formatTime(time),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 25.0
-                                  ),
-                                ),
-                              ),
-                              BlocProvider.value(
-                                  value: _characterCubit,
-                                  child: character
-                              ),
-                              for(var obs in context.read<ObstaclesCubit>().state)
-                                ObstacleWidget(obstacle: obs)
-                            ],
-                          );
-                        },
-                      ),
-                    )
-                ),
-              ),
-              Expanded(
-                  child: Container(
-                    color: Colors.deepPurple,
-                  )
-              )
-            ],
+          onTapUp: (_) => _characterCubit.shortJump(),
+          onLongPressUp: () => _characterCubit.longJump(),
+          child: BlocProvider.value(
+            value: _obstacleCubit,
+            child: BlocBuilder<ObstaclesCubit, List<Obstacle>>(
+              builder: (context, state) {
+                return Stack(
+                  children: [
+                    const Background(),
+                    TimerWidget(time: time),
+                    BlocProvider.value(
+                      value: _characterCubit,
+                      child: character,
+                    ),
+                    for(var obs in context
+                        .read<ObstaclesCubit>()
+                        .state)
+                      ObstacleWidget(obstacle: obs),
+                  ],
+                );
+              },
+            ),
           ),
         )
     );
