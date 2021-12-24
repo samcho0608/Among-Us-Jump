@@ -5,6 +5,7 @@ import 'package:among_us_jump/home/character/my_character.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:just_audio/just_audio.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -13,20 +14,46 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
   Duration duration = const Duration(milliseconds: 5);
   MyCharacter character = const MyCharacter();
   late final CharacterCubit _characterCubit = CharacterCubit(duration: duration);
   double time = 0.0;
+  final _player = AudioPlayer();
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    if(state == AppLifecycleState.paused) {
+      _player.stop();
+    }
+    else if(state == AppLifecycleState.resumed) {
+      _player.play();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance?.addObserver(this);
+    setUpBGM();
     runGame();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
     ]);
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
+
+  Future<void> setUpBGM() async {
+    await _player.setAsset('assets/audio/bgm.mp3');
+    await _player.setLoopMode(LoopMode.one);
+    _player.play();
   }
 
   void runGame() {

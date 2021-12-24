@@ -13,11 +13,15 @@ class CharacterCubit extends Cubit<CharacterState> {
 
   CharacterCubit({required this.duration}) : super(const CharacterStill());
 
+  Future<void> playJumpSound() async {
+    await _player.setAsset('assets/audio/jump.mp3');
+    _player.play();
+  }
+
   void jump() {
     double time = 0.0;
     if(state is CharacterStill) {
-      _player.setAsset('assets/audio/jump.mp3');
-      _player.play();
+      playJumpSound();
       Timer.periodic(duration, (timer) {
         time += 0.01;
         double targetY =
