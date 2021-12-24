@@ -13,9 +13,9 @@ class ObstaclesCubit extends Cubit<List<Obstacle>> {
   }
 
   void moveObstacles() {
-
-    emit([...state]
-      ..where((element) => element.xCoordinate < -1.0)
+    emit(List.from(
+        state.where((element) => element.xCoordinate >= -1.5)
+      )
       ..forEach((e) => e.move()));
   }
 }
