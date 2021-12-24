@@ -28,15 +28,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   double time = 0.0;
   final ObstaclesCubit _obstacleCubit = ObstaclesCubit();
   final _audioPlayer = AudioPlayer();
+  late Timer _createTimer;
+  late Timer _gameTimer;
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.paused) {
       _audioPlayer.stop();
+      _gameTimer.cancel();
+      _createTimer.cancel();
     }
     else if (state == AppLifecycleState.resumed) {
       _audioPlayer.play();
+      runGame();
     }
   }
 
@@ -65,13 +70,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   void runGame() {
-    Timer.periodic(const Duration(seconds: 1, milliseconds: 500), (timer) {
+    _createTimer = Timer.periodic(const Duration(seconds: 1, milliseconds: 500), (timer) {
       setState(() {
         _obstacleCubit.createObstacle();
       });
     });
 
-    Timer.periodic(duration, (timer) {
+    _gameTimer = Timer.periodic(duration, (timer) {
       setState(() {
         time += 0.005;
         _obstacleCubit.moveObstacles();
