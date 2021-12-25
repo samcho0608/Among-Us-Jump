@@ -22,19 +22,16 @@ class SettingsPage extends StatelessWidget {
       body: Stack(
         children : [
           Center(
-            child: Transform(
-              transform: Matrix4.identity(),
-              child: Container(
-                width: 300,
-                decoration: const BoxDecoration(
-                    gradient: RadialGradient(
-                        colors: [
-                          Colors.blueGrey,
-                          Colors.black
-                        ]
-                    ),
-                    shape: BoxShape.circle
-                ),
+            child: Container(
+              width: 300,
+              decoration: const BoxDecoration(
+                  gradient: RadialGradient(
+                      colors: [
+                        Colors.blueGrey,
+                        Colors.black
+                      ]
+                  ),
+                  shape: BoxShape.circle
               ),
             ),
           ),
@@ -50,14 +47,14 @@ class SettingsPage extends StatelessWidget {
           ),
           CarouselSlider(
               items: List.from(
-                  characterSprites.map((e) =>
+                  characterSprites.map((path) =>
                       GestureDetector(
                         onTap: () {
-                          context.read<CharacterCubit>().changeColor(e);
+                          context.read<CharacterCubit>().changeColor(path);
                           context.popRoute(this);
                         },
                         child: Image.asset(
-                          e,
+                          path,
                           width: 60,
                         ),
                       )
@@ -65,14 +62,12 @@ class SettingsPage extends StatelessWidget {
               ),
               options: CarouselOptions(
                 height: 400,
-                aspectRatio: 2,
-                viewportFraction: 0.8,
+                viewportFraction: 0.5,
                 initialPage: 0,
                 enableInfiniteScroll: true,
                 reverse: false,
                 autoPlayAnimationDuration: const Duration(milliseconds: 800),
                 autoPlayCurve: Curves.fastOutSlowIn,
-                enlargeCenterPage: true,
                 onPageChanged: (pageIndex, reason) {},
                 scrollDirection: Axis.horizontal,
               )
