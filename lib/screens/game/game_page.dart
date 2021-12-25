@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:among_us_jump/blocs/character/character_cubit.dart';
+import 'package:among_us_jump/blocs/game/game_cubit.dart';
+
 import 'widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,10 +18,7 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
-  Duration duration = const Duration(milliseconds: 15);
   MyCharacter character = const MyCharacter();
-  late final CharacterCubit _characterCubit = CharacterCubit(
-      duration: duration);
   double time = 0.0;
   final ObstaclesCubit _obstacleCubit = ObstaclesCubit();
   final _audioPlayer = AudioPlayer();
@@ -34,7 +34,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     else if (state == AppLifecycleState.resumed) {
       _audioPlayer.play();
-      runGame();
+      runGame(context.read<GameCubit>().state.duration);
     }
   }
 
@@ -43,7 +43,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
     setUpBGM();
-    runGame();
+    runGame(context.read<GameCubit>().state.duration);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
@@ -63,7 +63,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _audioPlayer.play();
   }
 
-  void runGame() {
+  void runGame(Duration duration) {
     _gameTimer = Timer.periodic(duration, (timer) {
       setState(() {
         time += 0.015;
@@ -81,8 +81,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
         body: GestureDetector(
-          onTapUp: (_) => _characterCubit.shortJump(),
-          onLongPressUp: () => _characterCubit.longJump(),
+          onTapUp: (_) => context.read<CharacterCubit>().shortJump(),
+          onLongPressUp: () => context.read<CharacterCubit>().longJump(),
           child: BlocProvider.value(
             value: _obstacleCubit,
             child: BlocBuilder<ObstaclesCubit, List<Obstacle>>(
@@ -91,10 +91,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   children: [
                     const Background(),
                     TimerWidget(time: time),
-                    BlocProvider.value(
-                      value: _characterCubit,
-                      child: character,
-                    ),
+                    character,
                     for(var obs in context
                         .read<ObstaclesCubit>()
                         .state)

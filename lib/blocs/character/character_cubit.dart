@@ -21,6 +21,10 @@ class CharacterCubit extends Cubit<CharacterState> {
     _player.play();
   }
 
+  void changeColor(String path) {
+    emit(CharacterStill(path: path));
+  }
+
   void jump(double velocity) {
     double time = 0.0;
     Timer.periodic(duration, (timer) {
@@ -29,12 +33,13 @@ class CharacterCubit extends Cubit<CharacterState> {
           CharacterState.initialHeight - (-4.9 * time * time + velocity * time);
       if(targetY >= CharacterState.initialHeight) {
         targetY = 1.0;
-        emit(const CharacterStill());
+        emit(CharacterStill(path: state.path));
         timer.cancel();
       }
       else {
         emit(CharacterJumping(
-            yCoordinate: targetY
+          yCoordinate: targetY,
+          path: state.path
         ));
       }
     });

@@ -51,7 +51,8 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      child: const PageButton(buttonText: '설정'),
+                      onTap: () => context.pushRoute(SettingsRoute()),
+                      child: const PageButton(buttonText: '캐릭터 설정'),
                     ),
                     GestureDetector(
                       onTap: () => context.pushRoute(const GameRoute()),
