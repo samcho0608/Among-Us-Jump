@@ -55,7 +55,7 @@ class SettingsPage extends StatelessWidget {
                         },
                         child: Image.asset(
                           path,
-                          width: 60,
+                          width: 100,
                         ),
                       )
                   )

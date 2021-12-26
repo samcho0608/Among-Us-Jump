@@ -18,7 +18,6 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
-  MyCharacter character = const MyCharacter();
   double time = 0.0;
   final ObstaclesCubit _obstacleCubit = ObstaclesCubit();
   final _audioPlayer = AudioPlayer();
@@ -42,6 +41,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
+    playGameStartSound();
     setUpBGM();
     runGame(context.read<GameCubit>().state.duration);
     SystemChrome.setPreferredOrientations([
@@ -55,6 +55,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _audioPlayer.dispose();
     _gameTimer.cancel();
     super.dispose();
+  }
+
+  Future<void> playGameStartSound() async {
+    AudioPlayer gameStartSoundPlayer = AudioPlayer();
+    await gameStartSoundPlayer.setAsset('assets/audio/game_start.mp3');
+    gameStartSoundPlayer.play();
   }
 
   Future<void> setUpBGM() async {
@@ -91,11 +97,25 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   children: [
                     const Background(),
                     TimerWidget(time: time),
-                    character,
-                    for(var obs in context
-                        .read<ObstaclesCubit>()
-                        .state)
-                      ObstacleWidget(obstacle: obs),
+                    Column(
+                      children: [
+                        Expanded(
+                            flex: 3,
+                            child: Stack(
+                                children: [
+                                  const MyCharacter(),
+                                  for(var obs in context
+                                      .read<ObstaclesCubit>()
+                                      .state)
+                                    ObstacleWidget(obstacle: obs),
+                                ]
+                            )
+                        ),
+                        Expanded(
+                            child: Container()
+                        )
+                      ],
+                    ),
                   ],
                 );
               },

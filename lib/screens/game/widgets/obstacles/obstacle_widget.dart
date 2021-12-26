@@ -25,47 +25,6 @@ class ObstacleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-            flex: 3,
-            child: buildObstacle()
-        ),
-        Expanded(child: Container())
-      ],
-    );
+    return buildObstacle();
   }
 }
-
-
-// class Obstacle extends StatefulWidget {
-//   final double xCoordinate;
-//
-//   const Obstacle({
-//     required this.xCoordinate,
-//     Key? key}) : super(key: key);
-//
-//   @override
-//   _ObstacleState createState() => _ObstacleState();
-// }
-//
-// class _ObstacleState extends State<Obstacle> {
-//   late double xCoordinate;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     xCoordinate = widget.xCoordinate;
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Align(
-//       alignment: Alignment(xCoordinate, 1.0),
-//       child: SizedBox(
-//           width: 60,
-//           child: Image.asset('assets/images/among_us_rock.png')
-//       ),
-//     );
-//   }
-// }
