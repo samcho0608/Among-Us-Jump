@@ -84,7 +84,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         if(
           context.read<CharacterCubit>().state.yCoordinate == 1.0 &&
               _obstacleCubit.state.any((element) => element.xCoordinate >= -0.8 && element.xCoordinate <= -0.75 )) {
-          context.read<CharacterCubit>().died();
+
+          int flooredTime = time.floor();
+          context.read<CharacterCubit>().died(flooredTime ~/ 60, flooredTime % 60);
           timer.cancel();
         }
       });
@@ -104,7 +106,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 return Stack(
                   children: [
                     const Background(),
-                    TimerWidget(time: time),
+                    Align(
+                      alignment: const Alignment(0.85,-0.85),
+                        child: TimerWidget(time: time)
+                    ),
                     Column(
                       children: [
                         Expanded(

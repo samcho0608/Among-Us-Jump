@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:among_us_jump/constants.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'character_state.dart';
 
@@ -63,7 +65,20 @@ class CharacterCubit extends Cubit<CharacterState> {
     }
   }
 
-  void died() {
+  void died(int minutes, int seconds) {
+    SharedPreferences.getInstance().then(
+            (prefs) {
+              int? originalHighMin = prefs.getInt(highMin);
+              int? originalHighSec = prefs.getInt(highSec);
+              if([originalHighSec,originalHighSec].any((e) => e == null) ||
+              originalHighMin! < minutes ||
+                  originalHighMin == minutes && originalHighSec! < seconds)
+                {
+                  prefs.setInt(highMin, minutes);
+                  prefs.setInt(highSec, seconds);
+                }
+            }
+    );
     emit(CharacterDead(yCoordinate: state.yCoordinate, path: state.path));
   }
 

@@ -1,4 +1,3 @@
-import 'package:among_us_jump/blocs/character/character_cubit.dart';
 import 'package:among_us_jump/routes/app_router.gr.dart';
 import 'package:among_us_jump/screens/home/widgets/page_button.dart';
 import 'package:auto_route/auto_route.dart';
