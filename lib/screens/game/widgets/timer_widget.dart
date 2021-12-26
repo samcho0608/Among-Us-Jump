@@ -10,6 +10,7 @@ class TimerWidget extends StatelessWidget {
   );
 
   const TimerWidget({required this.time, Key? key}) : super(key: key);
+
   String formatTime(double time) {
     int flooredTime = time.floor();
     String seconds = '${flooredTime % 60}'.padLeft(2, '0');
@@ -31,7 +32,7 @@ class TimerWidget extends StatelessWidget {
 
               if(originalHighSec != null && originalHighMin != null){
                 return Text(
-                  'HI : $originalHighMin : $originalHighSec',
+                  'HI: $originalHighMin : ${'$originalHighSec'.padLeft(2,'0')}',
                   style: textStyle,
                 );
               } else {
