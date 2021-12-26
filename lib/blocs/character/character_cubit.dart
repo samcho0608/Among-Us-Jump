@@ -28,6 +28,9 @@ class CharacterCubit extends Cubit<CharacterState> {
   void jump(double velocity) {
     double time = 0.0;
     Timer.periodic(duration, (timer) {
+      if(state is CharacterDead) {
+        timer.cancel();
+      }
       time += 0.03;
       double targetY =
           CharacterState.initialHeight - (-4.9 * time * time + velocity * time);
@@ -58,5 +61,13 @@ class CharacterCubit extends Cubit<CharacterState> {
       playJumpSound();
       jump(longJumpVelocity);
     }
+  }
+
+  void died() {
+    emit(CharacterDead(yCoordinate: state.yCoordinate, path: state.path));
+  }
+
+  void restart() {
+    emit(CharacterStill(path: state.path));
   }
 }

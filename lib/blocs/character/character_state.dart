@@ -44,7 +44,7 @@ class CharacterDead extends CharacterState {
   }) :
       super(
         yCoordinate: yCoordinate,
-        isAlive: true,
+        isAlive: false,
         path: path
       );
 

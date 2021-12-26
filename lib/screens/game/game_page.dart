@@ -41,6 +41,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
+    context.read<CharacterCubit>().restart();
     playGameStartSound();
     setUpBGM();
     runGame(context.read<GameCubit>().state.duration);
@@ -79,6 +80,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           obstacleCreateInterval = 1.5;
         }
         _obstacleCubit.moveObstacles();
+
+        if(
+          context.read<CharacterCubit>().state.yCoordinate == 1.0 &&
+              _obstacleCubit.state.any((element) => element.xCoordinate >= -0.8 && element.xCoordinate <= -0.75 )) {
+          context.read<CharacterCubit>().died();
+          timer.cancel();
+        }
       });
     });
   }

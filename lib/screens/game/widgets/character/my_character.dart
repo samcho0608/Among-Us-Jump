@@ -11,15 +11,12 @@ class MyCharacter extends StatelessWidget {
     return BlocBuilder<CharacterCubit, CharacterState>(
       builder: (context, state) {
         return Align(
-          alignment: Alignment(-1.0, state.yCoordinate),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-            child: Image.asset(
-              state.path,
-              width: 60,
-              height: 78,
-              fit: BoxFit.fitWidth,
-            ),
+          alignment: Alignment(-0.8, state.yCoordinate),
+          child: Image.asset(
+            state.path,
+            width: 60,
+            height: 78,
+            fit: BoxFit.fitWidth,
           ),
         );
       },

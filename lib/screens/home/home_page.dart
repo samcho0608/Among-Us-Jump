@@ -1,4 +1,4 @@
-import 'package:among_us_jump/constants.dart';
+import 'package:among_us_jump/blocs/character/character_cubit.dart';
 import 'package:among_us_jump/routes/app_router.gr.dart';
 import 'package:among_us_jump/screens/home/widgets/page_button.dart';
 import 'package:auto_route/auto_route.dart';
@@ -30,7 +30,6 @@ class HomePage extends StatelessWidget with WidgetsBindingObserver{
     _audioPlayer.seek(const Duration(seconds: 0))
         .then((value) => _audioPlayer.play());
     return super.didPopRoute();
-
   }
 
   @override
