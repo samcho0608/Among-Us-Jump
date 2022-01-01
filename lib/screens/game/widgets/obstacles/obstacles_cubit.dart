@@ -18,4 +18,8 @@ class ObstaclesCubit extends Cubit<List<Obstacle>> {
       )
       ..forEach((e) => e.move()));
   }
+
+  void restart() {
+    emit([]);
+  }
 }
