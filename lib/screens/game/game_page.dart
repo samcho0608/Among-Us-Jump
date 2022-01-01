@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:among_us_jump/blocs/character/character_cubit.dart';
 import 'package:among_us_jump/blocs/game/game_cubit.dart';
 
-import 'package:auto_route/auto_route.dart';
-
 import 'widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -101,48 +99,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         context: context,
         barrierDismissible: false,
         builder: (context) {
-          return WillPopScope(
-            onWillPop: () async => false,
-            child: AlertDialog(
-              // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-              //Dialog Main Title
-              title: Column(
-                children: const <Widget>[
-                  Text("You Died"),
-                ],
-              ),
-              //
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const <Widget>[
-                  Text(
-                    "Restart?",
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      context.popRoute(this);
-                    },
-                    child: const Text('홈으로')
-                ),
-                IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      _obstacleCubit.restart();
-                      context.read<CharacterCubit>().restart();
-                      runGame(context.read<GameCubit>().state.duration);
-                    },
-                    icon: const Icon(Icons.restart_alt)
-                )
-              ],
-            ),
-          );
+          return RestartDialog(onPressed: () {
+            Navigator.pop(context);
+            _obstacleCubit.restart();
+            context.read<CharacterCubit>().restart();
+            runGame(context.read<GameCubit>().state.duration);
+          });
         }
     );
   }
