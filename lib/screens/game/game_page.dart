@@ -111,6 +111,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    Character character = const Character();
+    Rect characterRect = character.getRect(MediaQuery.of(context).size);
     return Scaffold(
         body: GestureDetector(
           onTapUp: (_) => context.read<CharacterCubit>().shortJump(),
@@ -126,24 +128,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                       alignment: const Alignment(0.85,-0.85),
                         child: TimerWidget(time: time)
                     ),
-                    Column(
-                      children: [
-                        Expanded(
-                            flex: 3,
-                            child: Stack(
-                                children: [
-                                  const MyCharacter(),
-                                  for(var obs in context
-                                      .read<ObstaclesCubit>()
-                                      .state)
-                                    ObstacleWidget(obstacle: obs),
-                                ]
-                            )
-                        ),
-                        Expanded(
-                            child: Container()
-                        )
-                      ],
+                    Stack(
+                        children: [
+                          // TODO:: take care of character instance
+                          Positioned(
+                            top: characterRect.top,
+                            left: characterRect.left,
+                            height: characterRect.height,
+                            width: characterRect.width,
+                            child: character
+                          ),
+                          // const MyCharacter(),
+                          for(var obs in context
+                              .read<ObstaclesCubit>()
+                              .state)
+                            ObstacleWidget(obstacle: obs),
+                        ]
                     ),
                   ],
                 );

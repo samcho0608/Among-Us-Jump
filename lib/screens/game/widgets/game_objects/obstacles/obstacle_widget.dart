@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'obstacle.dart';
 import 'sprites/sprites.dart';

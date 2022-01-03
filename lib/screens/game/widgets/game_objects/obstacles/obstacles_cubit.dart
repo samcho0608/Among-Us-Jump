@@ -1,9 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'obstacle.dart';
-
-part 'obstacles_state.dart';
 
 class ObstaclesCubit extends Cubit<List<Obstacle>> {
   ObstaclesCubit() : super([]);
