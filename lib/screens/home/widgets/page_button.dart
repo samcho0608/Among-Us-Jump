@@ -30,10 +30,7 @@ class PageButton extends StatelessWidget {
         child: FittedBox(
           child: Text(
             buttonText,
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 25
-            ),
+            style: Theme.of(context).textTheme.bodyText1,
           ),
         ),
       ),

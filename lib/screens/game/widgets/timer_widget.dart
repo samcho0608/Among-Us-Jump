@@ -4,10 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class TimerWidget extends StatelessWidget {
   final double time;
-  final textStyle = const TextStyle(
-      color: Colors.white,
-      fontSize: 25.0
-  );
+
 
   const TimerWidget({required this.time, Key? key}) : super(key: key);
 
@@ -33,7 +30,7 @@ class TimerWidget extends StatelessWidget {
               if(originalHighSec != null && originalHighMin != null){
                 return Text(
                   'HI: $originalHighMin : ${'$originalHighSec'.padLeft(2,'0')}',
-                  style: textStyle,
+                  style: Theme.of(context).textTheme.bodyText2,
                 );
               } else {
                 return Container();
@@ -43,7 +40,7 @@ class TimerWidget extends StatelessWidget {
         const SizedBox(width: 10,),
         Text(
           'TIME: ${formatTime(time)}',
-          style: textStyle
+          style: Theme.of(context).textTheme.bodyText2
         ),
       ],
     );

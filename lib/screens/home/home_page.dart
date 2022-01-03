@@ -62,20 +62,9 @@ class HomePage extends StatelessWidget with WidgetsBindingObserver{
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Among Us Jump',
-                  style: TextStyle(
-                      fontFamily: 'Among Us Logo Font',
-                      color: Colors.white,
-                      fontSize: 80,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(5.0, 5.0),
-                          blurRadius: 3.0,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                        ),
-                      ]
-                  ),
+                  style: Theme.of(context).textTheme.headline1,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

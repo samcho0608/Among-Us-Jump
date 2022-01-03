@@ -1,6 +1,7 @@
 import 'package:among_us_jump/blocs/character/character_cubit.dart';
 import 'package:among_us_jump/blocs/game/game_cubit.dart';
 import 'package:among_us_jump/routes/app_router.gr.dart';
+import 'package:among_us_jump/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,17 +28,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         routeInformationParser: _appRouter.defaultRouteParser(),
         routerDelegate: _appRouter.delegate(),
-        theme: ThemeData(
-            fontFamily: 'VCR OSD Mono',
-            textTheme: const TextTheme(
-                headline1: TextStyle(
-                    color: Colors.white
-                ),
-                bodyText1: TextStyle(
-                    color: Colors.white
-                )
-            )
-        ),
+        theme: appTheme,
       ),
     );
   }
