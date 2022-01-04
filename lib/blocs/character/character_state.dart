@@ -2,14 +2,14 @@ part of 'character_cubit.dart';
 
 @immutable
 abstract class CharacterState {
-  static const double initialHeight = 1.0;
-  final double yCoordinate;
+  final double dispY, velY;
   final bool isAlive;
   final String path;
 
   const CharacterState({
-    required this.yCoordinate,
-    required this.isAlive,
+    this.dispY = 0,
+    this.velY = 0,
+    this.isAlive = true,
     required this.path,
   });
 }
@@ -19,7 +19,6 @@ class CharacterStill extends CharacterState {
     String path = 'assets/images/among_us_characters/among_us_character_red.png'
   }) :
       super(
-        yCoordinate: 1.0,
         isAlive: true,
         path: path
       );
@@ -27,11 +26,13 @@ class CharacterStill extends CharacterState {
 
 class CharacterJumping extends CharacterState {
   const CharacterJumping({
-    required double yCoordinate,
-    required String path
+    required double dispY,
+    required double velY,
+    required String path,
   }) :
       super(
-        yCoordinate: yCoordinate,
+        dispY: dispY,
+        velY: velY,
         isAlive: true,
         path: path
       );
@@ -39,11 +40,10 @@ class CharacterJumping extends CharacterState {
 
 class CharacterDead extends CharacterState {
   const CharacterDead({
-    required double yCoordinate,
     required String path,
   }) :
       super(
-        yCoordinate: yCoordinate,
+        dispY: 0,
         isAlive: false,
         path: path
       );

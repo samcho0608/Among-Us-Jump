@@ -24,8 +24,8 @@ class TimerWidget extends StatelessWidget {
           future: SharedPreferences.getInstance(),
             builder: (context, AsyncSnapshot<SharedPreferences> snapshot) {
               SharedPreferences? prefs = snapshot.data;
-              int? originalHighMin = prefs?.getInt(highMin);
-              int? originalHighSec = prefs?.getInt(highSec);
+              int? originalHighMin = prefs?.getInt(HIGH_MIN);
+              int? originalHighSec = prefs?.getInt(HIGH_SEC);
 
               if(originalHighSec != null && originalHighMin != null){
                 return Text(

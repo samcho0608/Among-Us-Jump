@@ -23,6 +23,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   final _audioPlayer = AudioPlayer();
   double obstacleCreateInterval = 1.5;
   late Timer _gameTimer;
+  Duration lastUpdateTime = const Duration();
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -81,15 +82,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         }
         _obstacleCubit.moveObstacles();
 
-        if(context.read<CharacterCubit>().state.yCoordinate == 1.0 &&
-              _obstacleCubit.state.any((element) => element.xCoordinate >= -0.95
-                  && element.xCoordinate <= -0.8 )) {
+        context.read<CharacterCubit>().update();
 
-          int flooredTime = time.floor();
-          context.read<CharacterCubit>().died(flooredTime ~/ 60, flooredTime % 60);
-          showRestartDialog();
-          timer.cancel();
-        }
+
+        // TODO:: Fix and implement collision event control
+        // if(context.read<CharacterCubit>().state.dispY == 1.0 &&
+        //       _obstacleCubit.state.any((element) => element.xCoordinate >= -0.95
+        //           && element.xCoordinate <= -0.8 )) {
+        //
+        //   int flooredTime = time.floor();
+        //   context.read<CharacterCubit>().died(flooredTime ~/ 60, flooredTime % 60);
+        //   showRestartDialog();
+        //   timer.cancel();
+        // }
       });
     });
   }
@@ -112,11 +117,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     Character character = const Character();
-    Rect characterRect = character.getRect(MediaQuery.of(context).size);
+    Rect characterRect = character.getRect(context, MediaQuery.of(context).size);
     return Scaffold(
         body: GestureDetector(
-          onTapUp: (_) => context.read<CharacterCubit>().shortJump(),
-          onLongPressUp: () => context.read<CharacterCubit>().longJump(),
+          onTapUp: (_) => context.read<CharacterCubit>().jump(),
+          onLongPressUp: () => context.read<CharacterCubit>().jump(isShort: false),
           child: BlocProvider.value(
             value: _obstacleCubit,
             child: BlocBuilder<ObstaclesCubit, List<Obstacle>>(

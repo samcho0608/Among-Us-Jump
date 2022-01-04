@@ -11,12 +11,12 @@ class Background extends StatelessWidget {
         Expanded(
           flex: 3,
           child: Container(
-            color: darkBackgroundColor,
+            color: DARK_BACKGROUND_COLOR,
           ),
         ),
         Expanded(
             child: Container(
-              color: purpleBackgroundColor,
+              color: PURPLE_BACKGROUND_COLOR,
             )
         )
       ],

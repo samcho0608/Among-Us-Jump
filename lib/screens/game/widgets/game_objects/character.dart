@@ -1,4 +1,5 @@
 import 'package:among_us_jump/blocs/character/character_cubit.dart';
+import 'package:among_us_jump/constants.dart';
 import 'package:among_us_jump/screens/game/widgets/game_objects/game_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,36 +26,32 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 //   }
 // }
 
-Sprite character = Sprite(
-    imagePath: 'assets/images/among_us_characters/among_us_character_blue.png',
-    imageWidth: 70,
-    imageHeight: 90
-);
-
 class Character extends GameObject {
+
   const Character({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      character.imagePath,
+      context.read<CharacterCubit>().state.path,
       gaplessPlayback: true,
     );
   }
 
   @override
-  Rect getRect(Size screenSize) {
+  Rect getRect(BuildContext context, Size screenSize) {
+    CharacterState state = context.read<CharacterCubit>().state;
+    Sprite sprite = Sprite(
+        imagePath: state.path,
+        imageWidth: CHARACTER_WIDTH,
+        imageHeight: CHARACTER_HEIGHT
+    );
+
     return Rect.fromLTWH(
         screenSize.width / 10,
-        screenSize.height * 3 / 4 - character.imageHeight,
-        character.imageWidth.toDouble(),
-        character.imageHeight.toDouble()
+        screenSize.height * 3 / 4 - sprite.imageHeight - state.dispY,
+        sprite.imageWidth.toDouble(),
+        sprite.imageHeight.toDouble()
     );
-  }
-
-  @override
-  void update(Duration lastTime, Duration elapsedTime) {
-    // TODO: implement update
-    super.update(lastTime, elapsedTime);
   }
 }

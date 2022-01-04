@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Sprite {
-  String imagePath;
-  int imageWidth, imageHeight;
+  final String imagePath;
+  final int imageWidth, imageHeight;
 
-  Sprite({
+  const Sprite({
     required this.imagePath,
     required this.imageWidth,
     required this.imageHeight
@@ -16,6 +16,5 @@ abstract class GameObject extends StatelessWidget{
 
   @override
   Widget build(BuildContext context);
-  Rect getRect(Size screenSize);
-  void update(Duration lastTime, Duration elapsedTime) {}
+  Rect getRect(BuildContext context, Size screenSize);
 }
