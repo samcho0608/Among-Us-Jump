@@ -34,10 +34,12 @@ class CharacterCubit extends Cubit<CharacterState> {
       if (dispY < 0) {
         emit(CharacterStill(path: state.path));
       } else {
-        emit(CharacterJumping(
-            dispY: dispY,
-            velY: state.velY - 45 * elapsedSeconds,
-            path: state.path)
+        emit(
+            CharacterJumping(
+              dispY: dispY,
+              velY: state.velY - 45 * elapsedSeconds,
+              path: state.path
+            )
         );
       }
     }
@@ -47,7 +49,13 @@ class CharacterCubit extends Cubit<CharacterState> {
   void jump({bool isShort = true}) {
     playJumpSound();
     if(state is CharacterStill) {
-      emit(CharacterJumping(dispY: 0, velY: isShort ? 100 : 125, path: state.path));
+      emit(
+          CharacterJumping(
+              dispY: 0,
+              velY: isShort ? 100 : 125,
+              path: state.path
+          )
+      );
     }
   }
 
