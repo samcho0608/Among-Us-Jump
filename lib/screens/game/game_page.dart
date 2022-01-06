@@ -95,6 +95,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
         // context.read<CharacterCubit>().update(duration);
         characterCubit.update(duration);
+        rockCubit.update(duration);
 
 
         // TODO:: Fix and implement collision event control

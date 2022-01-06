@@ -1,5 +1,7 @@
 part of 'obstacle_cubit.dart';
 
+const double defaultSpeed = 50;
+
 abstract class Obstacle extends GameObject {
   const Obstacle({
     required Sprite sprite,
@@ -24,10 +26,12 @@ abstract class Obstacle extends GameObject {
 
   factory Obstacle.random() {
     switch(Random().nextInt(4)) {
-      // case 0:
-      //   return const Rock();
-      default:
+      case 0:
         return const Rock();
+      case 1:
+        return const ImposterGun();
+      default:
+        return const ImposterGun();
     }
   }
 }
@@ -43,6 +47,21 @@ class Rock extends Obstacle {
         imageHeight: 40
     ),
     dX: dX,
-    velX: 75,
+    velX: defaultSpeed,
+  );
+}
+
+class ImposterGun extends Obstacle {
+  const ImposterGun({
+    double dX = 0
+  })
+      : super(
+    sprite: const Sprite(
+        imagePath: 'assets/images/among_us_imposter_gun.png',
+        imageWidth: 130,
+        imageHeight: CHARACTER_HEIGHT - 10
+    ),
+    dX: dX,
+    velX: defaultSpeed,
   );
 }
