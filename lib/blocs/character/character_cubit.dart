@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:among_us_jump/constants.dart';
-import 'package:among_us_jump/screens/game/widgets/game_objects/game_object.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';

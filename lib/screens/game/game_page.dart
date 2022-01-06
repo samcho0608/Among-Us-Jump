@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:among_us_jump/blocs/character/character_cubit.dart';
-import 'package:among_us_jump/blocs/game/game_cubit.dart';
+import 'package:among_us_jump/blocs/game_object/character/character_cubit.dart';
+import 'package:among_us_jump/blocs/game_object/game_object_cubit.dart';
+import 'package:among_us_jump/blocs/game_object/obstacles/obstacle_cubit.dart';
+import 'package:among_us_jump/constants.dart';
 
 import 'widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +21,20 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   double time = 0.0;
-  final ObstaclesCubit _obstacleCubit = ObstaclesCubit();
   final _audioPlayer = AudioPlayer();
   double obstacleCreateInterval = 1.5;
   late Timer _gameTimer;
   Duration lastUpdateTime = const Duration();
+
+  CharacterCubit characterCubit = CharacterCubit(
+      sprite: const Sprite(
+          imagePath: 'assets/images/among_us_characters/among_us_character_blue.png',
+          imageWidth: CHARACTER_WIDTH,
+          imageHeight: CHARACTER_HEIGHT
+      )
+  );
+
+  ObstacleCubit rockCubit = ObstacleCubit();
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -34,7 +45,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     else if (state == AppLifecycleState.resumed) {
       _audioPlayer.play();
-      runGame(context.read<GameCubit>().state.duration);
+      // runGame(context.read<GameCubit>().state.duration);
     }
   }
 
@@ -44,7 +55,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     WidgetsBinding.instance?.addObserver(this);
     playGameStartSound();
     setUpBGM();
-    runGame(context.read<GameCubit>().state.duration);
+    runGame(const Duration(milliseconds: 15));
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
@@ -76,13 +87,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       setState(() {
         time += 0.015;
         obstacleCreateInterval -= 0.015;
-        if(obstacleCreateInterval <= 0) {
-          _obstacleCubit.createObstacle();
+        if (obstacleCreateInterval <= 0) {
+          // _obstacleCubit.createObstacle();
           obstacleCreateInterval = 1.5;
         }
-        _obstacleCubit.moveObstacles();
+        // _obstacleCubit.moveObstacles();
 
-        context.read<CharacterCubit>().update();
+        // context.read<CharacterCubit>().update(duration);
+        characterCubit.update(duration);
 
 
         // TODO:: Fix and implement collision event control
@@ -106,9 +118,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         builder: (context) {
           return RestartDialog(onPressed: () {
             Navigator.pop(context);
-            _obstacleCubit.restart();
-            context.read<CharacterCubit>().restart();
-            runGame(context.read<GameCubit>().state.duration);
+            // _obstacleCubit.restart();
+            // context.read<CharacterCubit>().restart();
+            // runGame(context.read<GameCubit>().state.duration);
           });
         }
     );
@@ -116,45 +128,92 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    Character character = const Character();
-    Rect characterRect = character.getRect(context, MediaQuery.of(context).size);
+
     return Scaffold(
         body: GestureDetector(
-          onTapUp: (_) => context.read<CharacterCubit>().jump(),
-          onLongPressUp: () => context.read<CharacterCubit>().jump(isShort: false),
-          child: BlocProvider.value(
-            value: _obstacleCubit,
-            child: BlocBuilder<ObstaclesCubit, List<Obstacle>>(
-              builder: (context, state) {
-                return Stack(
-                  children: [
-                    const Background(),
-                    Align(
-                      alignment: const Alignment(0.85,-0.85),
-                        child: TimerWidget(time: time)
-                    ),
-                    Stack(
-                        children: [
-                          // TODO:: take care of character instance
-                          Positioned(
-                            top: characterRect.top,
-                            left: characterRect.left,
-                            height: characterRect.height,
-                            width: characterRect.width,
-                            child: character
-                          ),
-                          // const MyCharacter(),
-                          for(var obs in context
-                              .read<ObstaclesCubit>()
-                              .state)
-                            ObstacleWidget(obstacle: obs),
-                        ]
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
+            onTapUp: (_) => characterCubit.jump(),
+            onLongPressUp: () =>
+                characterCubit.jump(isShort: false),
+            child: Stack(
+              children: [
+                const Background(),
+                Align(
+                    alignment: const Alignment(0.85, -0.85),
+                    child: TimerWidget(time: time)
+                ),
+                Stack(
+                    children: [
+                      // TODO:: take care of character instance
+                      BlocProvider.value(
+                        value: characterCubit,
+                        child: BlocBuilder<CharacterCubit, Character>(
+                          builder: (context, state) {
+                            Rect characterRect = state.getRect(
+                                MediaQuery
+                                  .of(context)
+                                  .size
+                            );
+                            return Positioned(
+                                top: characterRect.top,
+                                left: characterRect.left,
+                                height: characterRect.height,
+                                width: characterRect.width,
+                                child: Image.asset(state.sprite.imagePath)
+                            );
+                          },
+                        ),
+                      ),
+                      BlocProvider.value(
+                        value: rockCubit,
+                        child: BlocBuilder<ObstacleCubit, Obstacle>(
+                          builder: (context, state) {
+                            Rect rockRect = state.getRect(
+                                MediaQuery
+                                    .of(context)
+                                    .size
+                            );
+                            return Positioned(
+                                top: rockRect.top,
+                                left: rockRect.left,
+                                height: rockRect.height,
+                                width: rockRect.width,
+                                child: Image.asset(state.sprite.imagePath)
+                            );
+                          },
+                        ),
+                      ),
+                    ]
+                ),
+              ],
+            )
+          // BlocProvider.value(
+          //   value: _obstacleCubit,
+          //   child: BlocBuilder<GameCubit, List<Obstacle>>(
+          //     builder: (context, state) {
+          //       return Stack(
+          //         children: [
+          //           const Background(),
+          //           Align(
+          //             alignment: const Alignment(0.85,-0.85),
+          //               child: TimerWidget(time: time)
+          //           ),
+          //           Stack(
+          //               children: [
+          //                 // TODO:: take care of character instance
+          //                 Positioned(
+          //                   top: characterRect.top,
+          //                   left: characterRect.left,
+          //                   height: characterRect.height,
+          //                   width: characterRect.width,
+          //                   child: character
+          //                 ),
+          //               ]
+          //           ),
+          //         ],
+          //       );
+          //     },
+          //   ),
+          // ),
         )
     );
   }
